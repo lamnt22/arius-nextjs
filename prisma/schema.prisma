@@ -1,0 +1,440 @@
+// This is your Prisma schema file, learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int             @id @default(autoincrement())
+  username          String          @unique
+  email             String          @unique
+  password          String
+  role              Role            @default(USER)
+  avatar            String?
+  employee_id       Int?
+  lock_flag         Boolean         @default(false)
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model Department {
+  id                Int             @id @default(autoincrement())
+  name              String          @unique
+  manager           Int
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model Customer {
+  id                Int             @id @default(autoincrement())
+  name              String
+  code              String          @unique
+  type              String?
+  description       String?
+  bookmark          Boolean         @default(false)
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model Project {
+  id                Int             @id @default(autoincrement())
+  name              String          @unique
+  code              String
+  customer_id       Int
+  department_id     Int
+  bookmark          Boolean         @default(false)
+  start_date        DateTime        @db.Date
+  end_date          DateTime        @db.Date
+  rank              Rank?
+  status            Status?
+  project_manager_id   Int? 
+  billing_effort    Float?          @db.Double
+  cost              Float?          @db.Double
+  cost_budget       Float?          @db.Double
+  currency          Currency        @default(JPY)
+  description       String?
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model Employee {
+  id                Int             @id @default(autoincrement())
+  name              String
+  code              String          @unique
+  position          Position
+  birthday          DateTime?       @db.Date
+  phone             String?
+  address           String?
+  status            EmployeeStatus  @default(OFF)
+  description       String?
+
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model EmployeeSalary {
+  id                Int             @id @default(autoincrement())
+  employee_id       Int
+  salary            Float           @db.Double
+  description       String?
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model EmployeeSalaryMonthly {
+  id                Int             @id @default(autoincrement())
+  employee_id       Int
+  pay_time          String          
+  total_hours       Float           @db.Double
+  diff_hours        Float           @db.Double
+  amount            Float           @db.Double
+  status            SalaryStatus    @default(UNPAID)
+  description       String?
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model EmployeeSalaryHistory {
+  id                Int             @id @default(autoincrement())
+  employee_id       Int
+  start_date        DateTime        @db.Date
+  end_date          DateTime?       @db.Date
+  salary            Float           @db.Double
+  description       String?
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model TimeSheet {
+  id                Int             @id @default(autoincrement())
+  date              DateTime        @db.Date
+  employee_id       Int
+  time_in           String           
+  time_out          String          
+  total_hours       String          
+  diff_hours        Float           @db.Double
+  status_in         TimeSheetStatus @default(MISSING)
+  status_out        TimeSheetStatus @default(MISSING)
+  ot_hours          Float           @db.Double @default(0.0)
+  status            TimeSheetStatus @default(OPEN)
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model TimeSheetRequest {
+  id                Int             @id @default(autoincrement())
+  date              DateTime        @db.Date
+  employee_id       Int
+  timeSheet_id      Int
+  time_in           String
+  time_out          String
+  approve_id        Int
+  reason            String
+  status            TimeSheetStatus @default(REQUEST)
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model EmployeeBonus {
+  id                Int             @id @default(autoincrement())
+  employee_id       Int
+  bonus_date        DateTime        @db.Date
+  bonus             Float           @db.Double
+  description       String?
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model ResourceAllocation {
+  id                Int             @id @default(autoincrement())
+  project_id        Int
+  employee_id       Int
+  position          Position
+  plan_effort       Float           @db.Double
+  start_date        DateTime        @db.Date
+  end_date          DateTime        @db.Date
+  description       String?
+  mm                Float          @db.Double
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model CurrentResource {
+  id                Int             @id @default(autoincrement())
+  employee_id       Int
+  resource_allocation_id       Int
+  date              DateTime        @db.Date
+  plan_effort       Float           @db.Double
+  remain_effort     Float           @db.Double
+  description       String?
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model ResourceExtra {
+  id                Int             @id @default(autoincrement())
+  project_id        Int
+  employee_id       Int
+  effort            Float           @db.Double
+  extra_date        DateTime        @db.Date
+  description       String?
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model Income {
+  id                Int             @id @default(autoincrement())
+  income_date       DateTime        @db.Date
+  type              IncomeType      @default(OTHERS)
+  amount            Float           @db.Double
+  currency          Currency        @default(JPY)
+  detail            String?
+  reference_id      Int?
+  description       String?
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model Expense {
+  id                Int             @id @default(autoincrement())
+  request_date      DateTime        @db.Date
+  deadline          DateTime        @db.Date
+  type              ExpenseType     @default(OTHERS)
+  amount            Float           @db.Double
+  currency          Currency        @default(JPY)
+  detail            String?
+  status            ExpenseStatus   @default(WAITING)
+  reference_id      Int?
+  description       String?
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model ExpenseDocument {
+  id                Int             @id @default(autoincrement())
+  expense_id        Int?
+  file              String?
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model CurrencyRate {
+  id                Int             @id @default(autoincrement())
+  currency          String?
+  rate              Float           @db.Double
+  date              DateTime?       @db.Date
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model InsightMaster {
+  id                Int             @id @default(autoincrement())
+  key               String          @unique
+  value             String?
+  description       String?
+
+  delete_flag       Boolean         @default(false)
+  change_flag       Boolean         @default(true)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model ExpenseBudget {
+  id                Int             @id @default(autoincrement())
+  type              ExpenseType     @default(OTHERS)
+  value             Int
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+model Holiday {
+  id                Int             @id @default(autoincrement())
+  date              DateTime        @db.Date
+  description       String?
+
+  delete_flag       Boolean         @default(false)
+  create_by         Int             @default(0)
+  create_at         DateTime        @default(now())
+  update_by         Int             @default(0)
+  update_at         DateTime        @updatedAt
+}
+
+
+enum Role {
+  USER
+  MANAGER
+  ADMIN
+}
+
+enum Rank {
+  A
+  B
+  C
+  D
+  E
+  F
+}
+
+enum Status {
+  OPEN
+  PENDING
+  CANCEL
+  CLOSE
+}
+enum SalaryStatus {
+  UNPAID
+  PAID
+}
+
+enum Position {
+  INTERN
+  DESIGNER
+  DEVELOPER
+  TESTER
+  TEST_LEADER
+  QA
+  QA_LEAD
+  COMTOR
+  TEAM_LEADER
+  PROJECT_TECHNICAL_LEADER
+  BRSE
+  PROJECT_MANAGER
+  RECEPTION
+  SALES
+  FREELANCER
+  HR
+  HR_LEADER
+  ACCOUNTANT
+  DEPARTMENT_MANAGER
+  COO
+  CTO
+  CEO
+}
+
+enum EmployeeStatus {
+  ON
+  OFF
+}
+
+enum Currency {
+  VND
+  JPY
+  USD
+  EUR
+}
+
+enum IncomeType {
+  PROJECT
+  OTHERS
+}
+
+enum ExpenseType {
+  SALARY
+  SALARY_13TH
+  BONUS
+  TEAM_BUILDING 
+  EQUIPMENT
+  OFFICE
+  OTHERS
+}
+
+enum ExpenseStatus {
+  WAITING
+  APPROVED
+  REJECTED
+  PENDING
+  CANCEL
+}
+
+enum TimeSheetStatus {
+  OK
+  MISSING
+  LATE
+  EARLY
+  OVERTIME
+  OPEN
+  REQUEST
+  APPROVED
+  REJECTED
+  CLOSE
+}

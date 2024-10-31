@@ -1,0 +1,107 @@
+
+/*
+Plugin Name: WP-Digg Style Paginator
+Plugin URI: http://www.mis-algoritmos.com/2007/09/09/wp-digg-style-pagination-plugin-v-10/
+Author: Victor De la Rocha
+Author URI: http://www.mis-algoritmos.com
+*/
+
+/*CSS Sabrosus style pagination*/
+div.pagination {
+	padding: 0;
+	margin: 0;
+	text-align:right;
+}
+
+div#pagination {
+	padding: 0;
+	margin: 0;
+	text-align:right;
+}
+
+div#pagination ul {
+	margin-bottom: 0 !important;
+	height: auto;
+}
+
+div#pagination ul.pagination {
+	height: auto !important;
+}
+
+div#pagination li.pagelinks {
+	/* width: 100%; */
+	padding: 3px 0;
+	margin: 10px 0;
+	text-align: right;
+	vertical-align: middle;
+	display: inline-block;
+}
+
+div#pagination li.pagelinks a {
+	float: left;
+	padding: 0 5px;
+	margin-right: 2px;
+	margin-bottom: 2px;
+	border: 1px solid #40916c;
+	color: #40916c;
+	text-decoration: none; 
+}
+
+div#pagination li.active a {
+	background-color: #40916c;
+	color: #FFF !important;
+}
+
+div#pagination li.disabled a {
+	border: 1px solid #6c757d;
+	color: #6c757d;
+	cursor: not-allowed;
+}
+
+div.p-datepicker-header{
+    padding: 0 !important;
+}
+
+.p-datepicker table td{
+    padding: 0 !important;
+}
+
+.p-datepicker table td > span {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 13.5px;
+    font-weight: 400;
+}
+
+.p-datepicker table th{
+    padding: 0 !important;
+    text-align: center;
+    font-size: 9px;
+}
+
+.p-datepicker table th span{
+    color: #999 !important;
+    font-weight: 700;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-year{
+    padding: 0 !important;
+    font-size: 13.5px;
+    font-weight: 300 !important;
+    color: rgb(153, 153, 153) !important;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month{
+    padding: 0 !important;
+    font-size: 13.5px;
+    font-weight: 500;
+}
+
+.p-inputtext:enabled:focus {
+	box-shadow: none !important;
+}
+
+.p-inputtext {
+	border: 0 !important;
+	outline: none;
+}
